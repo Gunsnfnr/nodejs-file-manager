@@ -1,4 +1,5 @@
 import os from "os";
+import { changeDirectory } from "./src/change-directory.js";
 
 const listenToUserInput = (username) => {
   process.stdin.on("data", (chunk) => {
@@ -8,8 +9,10 @@ const listenToUserInput = (username) => {
     } else if (chunk.toString() === `up${os.EOL}`) {
       process.chdir("..");
       console.log(`You are currently in ${process.cwd()}`);
+    } else if (chunk.toString().startsWith("cd ")) {
+      changeDirectory(chunk);
     } else {
-      console.log(`Invalid input`);
+      console.error(`Invalid input`);
     }
   });
 };

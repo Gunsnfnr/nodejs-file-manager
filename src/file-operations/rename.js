@@ -5,6 +5,7 @@ import path from "node:path";
 
 const rename = async (userInput) => {
   const pathToFileAndFileName = userInput
+    .trim()
     .slice(3)
     .replace(os.EOL, "")
     .trim()

@@ -3,7 +3,7 @@ import os from "os";
 
 const line = "-".repeat(process.stdout.columns);
 const read = async (userInput) => {
-  const pathToFile = userInput.slice(4).replace(os.EOL, "");
+  const pathToFile = userInput.trim().slice(4).replace(os.EOL, "");
   try {
     await access(pathToFile);
     const content = await readFile(pathToFile, {

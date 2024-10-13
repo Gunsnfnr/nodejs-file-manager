@@ -4,6 +4,7 @@ import { listDirectory } from "./list-directory.js";
 import { read } from "./file-operations/read.js";
 import { create } from "./file-operations/create.js";
 import { rename } from "./file-operations/rename.js";
+import { copy } from "./file-operations/copy.js";
 
 const listenToUserInput = (username) => {
   process.stdin.on("data", async (chunk) => {
@@ -36,6 +37,10 @@ const listenToUserInput = (username) => {
 
       case chunk.toString().startsWith("rn "):
         await rename(chunk.toString());
+        break;
+
+      case chunk.toString().startsWith("cp "):
+        await copy(chunk.toString());
         break;
 
       default:

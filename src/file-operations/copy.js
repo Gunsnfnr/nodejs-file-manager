@@ -3,22 +3,9 @@ import os from "os";
 import path from "node:path";
 import { access } from "node:fs/promises";
 import { createReadStream, createWriteStream } from "fs";
+import { getFilePathsFromUserInput } from "./utils/get-file-paths-from-user-input";
 
-const copy = async (userInput) => {
-  const pathToFileAndPathToNewDir = userInput
-    .trim()
-    .slice(3)
-    .replace(os.EOL, "")
-    .trim()
-    .split(" ");
-
-  if (pathToFileAndPathToNewDir.length !== 2) {
-    return console.error("Invalid input");
-  }
-
-  const [pathToFile, pathToNewDir] = pathToFileAndPathToNewDir;
-  const newPathToFile = path.join(pathToNewDir, path.parse(pathToFile).base);
-
+const copy = async (pathToFile, newPathToFile, isCopyOperation) => {
   try {
     await access(newPathToFile);
     console.error("Operation failed.");
@@ -32,7 +19,7 @@ const copy = async (userInput) => {
       readStream.pipe(writeStream);
 
       writeStream.on("finish", () => {
-        console.log("File copied successfully.");
+        if (isCopyOperation) console.log("File copied successfully.");
         writeStream.close();
       });
     } catch (err) {

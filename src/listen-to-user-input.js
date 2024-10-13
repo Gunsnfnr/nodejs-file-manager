@@ -5,6 +5,8 @@ import { read } from "./file-operations/read.js";
 import { create } from "./file-operations/create.js";
 import { rename } from "./file-operations/rename.js";
 import { copy } from "./file-operations/copy.js";
+import { remove } from "./file-operations/remove.js";
+import { getFilePathsFromUserInput } from "./file-operations/utils/get-file-paths-from-user-input";
 
 const listenToUserInput = (username) => {
   process.stdin.on("data", async (chunk) => {
@@ -40,11 +42,24 @@ const listenToUserInput = (username) => {
         break;
 
       case chunk.toString().startsWith("cp "):
-        await copy(chunk.toString());
+        try {
+          const [pathToFile, newPathToFile] = getFilePathsFromUserInput(
+            chunk.toString()
+          );
+          if (pathToFile && newPathToFile)
+            await copy(pathToFile, newPathToFile, true);
+        } catch (err) {
+          console.error(`Invalid input.`);
+        }
+        break;
+
+      case chunk.toString().startsWith("rm "):
+        const pathToFile = chunk.toString().trim().slice(3).replace(os.EOL, "");
+        await remove(pathToFile, false);
         break;
 
       default:
-        console.error(`Invalid input`);
+        console.error(`Invalid input.`);
     }
   });
 };

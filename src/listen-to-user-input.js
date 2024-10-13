@@ -1,9 +1,10 @@
 import os from "os";
 import { changeDirectory } from "./change-directory.js";
 import { listDirectory } from "./list-directory.js";
+import { read } from "./file-operations/read.js";
 
 const listenToUserInput = (username) => {
-  process.stdin.on("data", (chunk) => {
+  process.stdin.on("data", async (chunk) => {
     switch (true) {
       case chunk.toString() === `.exit${os.EOL}`:
         console.log(`Thank you for using File Manager, ${username}, goodbye!`);
@@ -21,6 +22,10 @@ const listenToUserInput = (username) => {
 
       case chunk.toString() === `ls${os.EOL}`:
         listDirectory();
+        break;
+
+      case chunk.toString().startsWith("cat "):
+        await read(chunk.toString());
         break;
 
       default:

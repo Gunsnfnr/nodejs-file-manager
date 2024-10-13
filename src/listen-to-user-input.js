@@ -3,6 +3,7 @@ import { changeDirectory } from "./change-directory.js";
 import { listDirectory } from "./list-directory.js";
 import { read } from "./file-operations/read.js";
 import { create } from "./file-operations/create.js";
+import { rename } from "./file-operations/rename.js";
 
 const listenToUserInput = (username) => {
   process.stdin.on("data", async (chunk) => {
@@ -31,6 +32,10 @@ const listenToUserInput = (username) => {
 
       case chunk.toString().startsWith("add "):
         await create(chunk.toString());
+        break;
+
+      case chunk.toString().startsWith("rn "):
+        await rename(chunk.toString());
         break;
 
       default:

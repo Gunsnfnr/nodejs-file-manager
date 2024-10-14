@@ -10,6 +10,8 @@ import { getFilePathsFromUserInput } from "./file-operations/utils/get-file-path
 import { getEol } from "./os/get-eol.js";
 import { getCpus } from "./os/get-cpus.js";
 import { getHomedir } from "./os/get-homedir.js";
+import { getUsername } from "./os/get-user-name.js";
+import { getArchitecture } from "./os/get-architecture.js";
 
 const listenToUserInput = (username) => {
   process.stdin.on("data", async (chunk) => {
@@ -93,6 +95,14 @@ const listenToUserInput = (username) => {
 
       case chunk.toString() === `os --homedir${os.EOL}`:
         getHomedir();
+        break;
+
+      case chunk.toString() === `os --username${os.EOL}`:
+        getUsername();
+        break;
+
+      case chunk.toString() === `os --architecture${os.EOL}`:
+        getArchitecture();
         break;
 
       default:

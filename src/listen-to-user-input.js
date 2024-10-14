@@ -6,12 +6,16 @@ import { create } from "./file-operations/create.js";
 import { rename } from "./file-operations/rename.js";
 import { copy } from "./file-operations/copy.js";
 import { remove } from "./file-operations/remove.js";
-import { getFilePathsFromUserInput } from "./file-operations/utils/get-file-paths-from-user-input";
+import { getFilePathsFromUserInput } from "./file-operations/utils/get-file-paths-from-user-input.js";
 import { getEol } from "./os/get-eol.js";
 import { getCpus } from "./os/get-cpus.js";
 import { getHomedir } from "./os/get-homedir.js";
 import { getUsername } from "./os/get-user-name.js";
 import { getArchitecture } from "./os/get-architecture.js";
+import { calculateHash } from "./hash/hash.js";
+import { compress } from "./zip/compress.js";
+import { getFilePathsForCompressOps } from "./zip/utils/get-file-paths-from-user-input.js";
+import { decompress } from "./zip/decompress.js";
 
 const listenToUserInput = (username) => {
   process.stdin.on("data", async (chunk) => {
@@ -103,6 +107,44 @@ const listenToUserInput = (username) => {
 
       case chunk.toString() === `os --architecture${os.EOL}`:
         getArchitecture();
+        break;
+
+      case chunk.toString().startsWith("hash "):
+        await calculateHash(chunk.toString());
+        break;
+
+      case chunk.toString().startsWith("compress "):
+        try {
+          const [pathToFile, pathToDestination] = getFilePathsForCompressOps(
+            chunk.toString(),
+            9
+          );
+          if (pathToFile && pathToDestination)
+            await compress(pathToFile, pathToDestination);
+        } catch (err) {
+          if (err.message.includes("ENOENT")) {
+            console.error("Operation failed.");
+          } else {
+            console.error(err.message);
+          }
+        }
+        break;
+
+      case chunk.toString().startsWith("decompress "):
+        try {
+          const [pathToFile, pathToDestination] = getFilePathsForCompressOps(
+            chunk.toString(),
+            11
+          );
+          if (pathToFile && pathToDestination)
+            await decompress(pathToFile, pathToDestination);
+        } catch (err) {
+          if (err.message.includes("ENOENT")) {
+            console.error("Operation failed.");
+          } else {
+            console.error(err.message);
+          }
+        }
         break;
 
       default:

@@ -3,7 +3,6 @@ import os from "os";
 import path from "node:path";
 import { access } from "node:fs/promises";
 import { createReadStream, createWriteStream } from "fs";
-import { getFilePathsFromUserInput } from "./utils/get-file-paths-from-user-input";
 
 const copy = async (pathToFile, newPathToFile, isCopyOperation) => {
   let isSourceFileExist = false;
@@ -32,7 +31,7 @@ const copy = async (pathToFile, newPathToFile, isCopyOperation) => {
     readStream.pipe(writeStream);
 
     writeStream.on("finish", () => {
-      if (isCopyOperation) console.log("File copied successfully.");
+      if (isCopyOperation) console.log("File was copied successfully.");
       writeStream.close();
     });
   } catch (err) {

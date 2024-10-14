@@ -1,4 +1,5 @@
 import os from "os";
+import { styleText } from "node:util";
 
 let username;
 const salutation = () => {
@@ -7,7 +8,12 @@ const salutation = () => {
       username = process.argv[i].replace("--username=", "");
     }
   }
-  console.log(`Welcome to the File Manager, ${username}!`);
+  console.log(
+    styleText(
+      ["underline", "blue"],
+      `Welcome to the File Manager, ${username}!`
+    )
+  );
   process.chdir(os.userInfo().homedir);
   console.log(`You are currently in ${process.cwd()}`);
   process.stdin.resume();

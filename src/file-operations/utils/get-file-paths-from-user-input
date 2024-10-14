@@ -10,7 +10,7 @@ const getFilePathsFromUserInput = (userInput) => {
     .split(" ");
 
   if (pathToFileAndPathToNewDir.length !== 2) {
-    throw new Error("Operation failed.");
+    throw new Error("Invalid input.");
   }
 
   const [pathToFile, pathToNewDir] = pathToFileAndPathToNewDir;

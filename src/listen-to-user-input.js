@@ -49,7 +49,11 @@ const listenToUserInput = (username) => {
           if (pathToFile && newPathToFile)
             await copy(pathToFile, newPathToFile, true);
         } catch (err) {
-          console.error(`Invalid input.`);
+          if (err.message.includes("ENOENT")) {
+            console.error("Operation failed.");
+          } else {
+            console.error(err.message);
+          }
         }
         break;
 
@@ -58,8 +62,26 @@ const listenToUserInput = (username) => {
         await remove(pathToFile, false);
         break;
 
+      case chunk.toString().startsWith("mv "):
+        try {
+          const [pathToFile, newPathToFile] = getFilePathsFromUserInput(
+            chunk.toString()
+          );
+          if (pathToFile && newPathToFile) {
+            await copy(pathToFile, newPathToFile, false);
+            await remove(pathToFile, true);
+          }
+        } catch (err) {
+          if (err.message.includes("ENOENT")) {
+            console.error("Operation failed.");
+          } else {
+            console.error(err.message);
+          }
+        }
+        break;
+
       default:
-        console.error(`Invalid input.`);
+        console.error("Invalid input.");
     }
   });
 };

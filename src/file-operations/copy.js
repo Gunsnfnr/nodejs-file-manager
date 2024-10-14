@@ -6,25 +6,38 @@ import { createReadStream, createWriteStream } from "fs";
 import { getFilePathsFromUserInput } from "./utils/get-file-paths-from-user-input";
 
 const copy = async (pathToFile, newPathToFile, isCopyOperation) => {
+  let isSourceFileExist = false;
+  let isDestinationFileExist = false;
   try {
-    await access(newPathToFile);
-    console.error("Operation failed.");
-    console.error(`Invalid input: file ${newPathToFile} already exists.`);
-  } catch (err) {
-    try {
-      await access(pathToFile);
+    await access(pathToFile).then(() => {
+      isSourceFileExist = true;
+    });
 
-      const readStream = createReadStream(pathToFile, "utf-8");
-      const writeStream = createWriteStream(newPathToFile, "utf-8");
-      readStream.pipe(writeStream);
-
-      writeStream.on("finish", () => {
-        if (isCopyOperation) console.log("File copied successfully.");
-        writeStream.close();
+    await access(newPathToFile)
+      .then((data) => {
+        isDestinationFileExist = true;
+        throw new Error(
+          `Operation failed. File ${newPathToFile} already exists.`
+        );
+      })
+      .catch((err) => {
+        if (isDestinationFileExist)
+          throw new Error(
+            `Operation failed. File ${newPathToFile} already exists.`
+          );
       });
-    } catch (err) {
-      console.error("Operation failed.");
-    }
+
+    const readStream = createReadStream(pathToFile, "utf-8");
+    const writeStream = createWriteStream(newPathToFile, "utf-8");
+    readStream.pipe(writeStream);
+
+    writeStream.on("finish", () => {
+      if (isCopyOperation) console.log("File copied successfully.");
+      writeStream.close();
+    });
+  } catch (err) {
+    if (isSourceFileExist && !isDestinationFileExist) return;
+    throw err;
   }
 };
 

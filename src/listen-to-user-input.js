@@ -17,12 +17,18 @@ import { compress } from "./zip/compress.js";
 import { getFilePathsForCompressOps } from "./zip/utils/get-file-paths-from-user-input.js";
 import { decompress } from "./zip/decompress.js";
 import { showConditionalError } from "./utils/show-conditional-error.js";
+import { styleText } from "node:util";
 
 const listenToUserInput = (username) => {
   process.stdin.on("data", async (chunk) => {
     switch (true) {
       case chunk.toString() === `.exit${os.EOL}`:
-        console.log(`Thank you for using File Manager, ${username}, goodbye!`);
+        console.log(
+          styleText(
+            ["underline", "blue"],
+            `Thank you for using File Manager, ${username}, goodbye!`
+          )
+        );
         process.exit();
         break;
 

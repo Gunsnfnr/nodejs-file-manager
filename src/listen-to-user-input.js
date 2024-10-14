@@ -16,6 +16,7 @@ import { calculateHash } from "./hash/hash.js";
 import { compress } from "./zip/compress.js";
 import { getFilePathsForCompressOps } from "./zip/utils/get-file-paths-from-user-input.js";
 import { decompress } from "./zip/decompress.js";
+import { showConditionalError } from "./utils/show-conditional-error.js";
 
 const listenToUserInput = (username) => {
   process.stdin.on("data", async (chunk) => {
@@ -58,11 +59,7 @@ const listenToUserInput = (username) => {
           if (pathToFile && newPathToFile)
             await copy(pathToFile, newPathToFile, true);
         } catch (err) {
-          if (err.message.includes("ENOENT")) {
-            console.error("Operation failed.");
-          } else {
-            console.error(err.message);
-          }
+          showConditionalError(err);
         }
         break;
 
@@ -81,11 +78,7 @@ const listenToUserInput = (username) => {
             await remove(pathToFile, true);
           }
         } catch (err) {
-          if (err.message.includes("ENOENT")) {
-            console.error("Operation failed.");
-          } else {
-            console.error(err.message);
-          }
+          showConditionalError(err);
         }
         break;
 
@@ -122,11 +115,7 @@ const listenToUserInput = (username) => {
           if (pathToFile && pathToDestination)
             await compress(pathToFile, pathToDestination);
         } catch (err) {
-          if (err.message.includes("ENOENT")) {
-            console.error("Operation failed.");
-          } else {
-            console.error(err.message);
-          }
+          showConditionalError(err);
         }
         break;
 
@@ -139,11 +128,7 @@ const listenToUserInput = (username) => {
           if (pathToFile && pathToDestination)
             await decompress(pathToFile, pathToDestination);
         } catch (err) {
-          if (err.message.includes("ENOENT")) {
-            console.error("Operation failed.");
-          } else {
-            console.error(err.message);
-          }
+          showConditionalError(err);
         }
         break;
 

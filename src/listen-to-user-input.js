@@ -9,6 +9,7 @@ import { remove } from "./file-operations/remove.js";
 import { getFilePathsFromUserInput } from "./file-operations/utils/get-file-paths-from-user-input";
 import { getEol } from "./os/get-eol.js";
 import { getCpus } from "./os/get-cpus.js";
+import { getHomedir } from "./os/get-homedir.js";
 
 const listenToUserInput = (username) => {
   process.stdin.on("data", async (chunk) => {
@@ -88,6 +89,10 @@ const listenToUserInput = (username) => {
 
       case chunk.toString() === `os --cpus${os.EOL}`:
         getCpus();
+        break;
+
+      case chunk.toString() === `os --homedir${os.EOL}`:
+        getHomedir();
         break;
 
       default:

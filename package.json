@@ -1,0 +1,19 @@
+{
+  "name": "nodejs-file-manager",
+  "version": "1.0.0",
+  "description": "Implementation of this assignment: https://github.com/AlreadyBored/nodejs-assignments/blob/main/assignments/file-manager/assignment.md",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Gunsnfnr/nodejs-file-manager.git"
+  },
+  "keywords": [
+    "nodejs"
+  ],
+  "author": "Artyom P",
+  "license": "ISC"
+}
